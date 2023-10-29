@@ -2,7 +2,7 @@ import streamlit
 import pandas
 import requests
 import snowflake.connector
-#from urillib.error import URLError
+from urillib.error import URLError
 
 streamlit.title("My Parent Healthy Diner")
 streamlit.header("Breakfast Favorites")
@@ -25,15 +25,19 @@ streamlit.dataframe(fruits_to_show)
 streamlit.header("🍓🍎🍒Fruityvice Fruit Advice!🍏🍐🍈")
 
 # This will not only  show only but it show the value i tabluar format of what user are search in search tab
-fruit_choice = streamlit.text_input('What fruit would you like information about?','Kiwi')
-streamlit.write('The user entered ', fruit_choice)
+try:
+    fruit_choice = streamlit.text_input('What fruit would you like information about?')
+    if not fruit_choice:
+        streamlit.error('Please select a fruit to get information')
+    else:
+        fruityvice_response = requests.get("https://fruityvice.com/api/fruit/"+ fruit_choice)
+        # take the jason file data and shows into normalize form which shows in tabular format
+        fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
+        # show output in the screen as in RDBMS like tabular format
+        streamlit.dataframe(fruityvice_normalized)
+except URLError as e:
+    stremlit.error()
 
-fruityvice_response = requests.get("https://fruityvice.com/api/fruit/"+ fruit_choice)
-
-# take the jason file data and shows into normalize form which shows in tabular format 
-fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
-# show output in the screen as in RDBMS like tabular format
-streamlit.dataframe(fruityvice_normalized)
 
 streamlit.stop()
 
