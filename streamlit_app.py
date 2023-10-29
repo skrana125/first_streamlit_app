@@ -20,6 +20,8 @@ fruits_to_show = my_fruit_list.loc[fruits_selected]
 streamlit.dataframe(fruits_to_show)
 
 streamlit.header("🍓🍎🍒Fruityvice Fruit Advice!🍏🍐🍈")
+
+# This will not only  show only but it show the value i tabluar format of what user are search in search tab
 fruit_choice = streamlit.text_input('What fruit would you like information about?','Kiwi')
 streamlit.write('The user entered ', fruit_choice)
 
