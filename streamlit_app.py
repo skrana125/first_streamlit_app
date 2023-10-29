@@ -45,6 +45,22 @@ streamlit.dataframe(my_data_rows)
 
 # Allow user to add into list
 add_my_fruit = streamlit.text_input("What fruit would you like to add", 'Jackfruit')
-insert_query = f"Insert into Fruit_load_list (fruit_name) values ('{add_my_fruit}')"
-my_cur.execute(insert_query)
-streamlit.success('Thanks for adding', add_my_fruit) 
+
+# Check if the user provided a fruit to add
+if add_my_fruit:
+    # Create an INSERT query to add the new fruit to the table
+    insert_query = f"INSERT INTO FRUIT_LOAD_LIST (FRUIT_NAME) VALUES ('{add_my_fruit}')"
+    
+    # Execute the INSERT query to add the new fruit to the table
+    try:
+        my_cur.execute(insert_query)
+        my_cnx.commit()
+        streamlit.success(f"Thanks for adding '{add_my_fruit}'")
+    except Exception as e:
+        streamlit.error(f"Error adding data to the table: {str(e)}")
+
+# Display the updated data from the table
+my_cur.execute("SELECT * FROM FRUIT_LOAD_LIST")
+my_data_rows = my_cur.fetchall()
+streamlit.text("The updated fruit load list contains:")
+streamlit.dataframe(my_data_rows)
