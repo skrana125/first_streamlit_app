@@ -43,7 +43,7 @@ try:
 except URLError as e:
     stremlit.error()
 
-streamlit.header("The fruit load list contains:")
+streamlit.header("View Our Fruit List - Add Your Favorites!")
 
 #snowflake related function
 # first creat function to load fruit into the table which with help of function we can execute time and again
@@ -53,9 +53,10 @@ def get_fruit_load_list():
         return my_cur.fetchall()
 
 # add button to load fruit
-if streamlit.button('Get Fruit Load List'):
+if streamlit.button('Get Fruit List'):
     my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
     my_data_rows = get_fruit_load_list()
+    my_cnx.close()
     streamlit.dataframe(my_data_rows)
 
 # allow enduser to add fruit to the list
